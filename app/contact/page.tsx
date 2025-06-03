@@ -4,16 +4,44 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Mail, MapPin, Clock, CheckCircle, Linkedin, Github, Globe } from "lucide-react"
+import { Mail, MapPin, Clock, CheckCircle, Linkedin, Github, Globe, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { submitContactForm } from "./actions"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { ContactForm } from "./ContactForm"
 
-export default function ContactPage() {
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const success = searchParams?.success === "true"
+  const error = searchParams?.error === "true"
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
       {/* Hero Section */}
       <section className="pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-6xl">
+          {success && (
+            <Alert className="mb-6 bg-green-600/20 border-green-600/30">
+              <CheckCircle className="h-4 w-4 text-green-400" />
+              <AlertTitle className="text-green-400">Thank you for reaching out!</AlertTitle>
+              <AlertDescription className="text-green-300">
+                We appreciate your message and will connect with you soon. Please check your email for confirmation.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {error && (
+            <Alert className="mb-6 bg-red-600/20 border-red-600/30">
+              <AlertCircle className="h-4 w-4 text-red-400" />
+              <AlertTitle className="text-red-400">Error</AlertTitle>
+              <AlertDescription className="text-red-300">
+                There was an error sending your message. Please try again later or contact us directly via email.
+              </AlertDescription>
+            </Alert>
+          )}
           <div className="text-center mb-16">
             <Badge className="bg-blue-600/20 text-blue-400 border-blue-600/30 mb-4">Get In Touch</Badge>
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
@@ -41,63 +69,7 @@ export default function ContactPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form action={submitContactForm} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-slate-300">
-                        Name *
-                      </Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        required
-                        className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
-                        placeholder="Your full name"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-slate-300">
-                        Email *
-                      </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        required
-                        className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
-                        placeholder="your.email@example.com"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="subject" className="text-slate-300">
-                      Subject
-                    </Label>
-                    <Input
-                      id="subject"
-                      name="subject"
-                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
-                      placeholder="What can I help you with?"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="text-slate-300">
-                      Message *
-                    </Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      required
-                      rows={6}
-                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
-                      placeholder="Tell me about your project, goals, and how I can help..."
-                    />
-                  </div>
-                  <Button type="submit" size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                    Send Message
-                    <Mail className="ml-2 h-4 w-4" />
-                  </Button>
-                </form>
+                <ContactForm />
               </CardContent>
             </Card>
 
